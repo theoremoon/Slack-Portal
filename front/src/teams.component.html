@@ -1,0 +1,20 @@
+<div>
+Add new token
+<input #apitoken>
+<input type="button" (click)="add_token(apitoken.value); apitoken.value='';">
+</div>
+<div id="teams" *ngFor="let team of teams | async">
+<a style="display: block" href="https://{{ team.domain }}.slack.com" target="_blank" class="team">
+    <div class="team-name">{{ team.name }}</div>
+    <div class="channel-name">{{ team.channel }} - {{ team.last_modified | date:'HH:mm:ss' }}</div>
+    <ul class="posts" *ngFor="let post of team.posts">
+        <li class="post">
+            <div class="author">
+                <img src="{{ post.author.face_image_url }}" alt="{{ post.author.name }}" class="author-face-image">
+                <span class="author-name">{{ post.author.name }}</span>
+            </div>
+            <div class="content">{{ post.content }}</div>
+        </li>
+    </ul>
+</a>
+</div>
