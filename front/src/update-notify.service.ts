@@ -10,45 +10,63 @@ export class UpdateNotifyService {
     private key: string;
     updateNotifier = new Subject<Team>();
     resultNotifier = new Subject<Result>();
+
     register_token(apiToken: string): Promise<boolean> {
         return this.ws.sendJson({
             command: 'NewToken',
-            arguments: [ this.key , apiToken ]
+            arguments: [ apiToken ]
         });
     }
+
+    register(username: string, password: string): Promise<boolean> {
+        return this.ws.sendJson({
+            command: 'Register',
+            arguments: [ username, password ]
+        });
+    }
+    login(username: string, password: string): Promise<boolean> {
+        return this.ws.sendJson({
+            command: 'Login',
+            arguments: [ username, password ]
+        });
+    }
+    resume(sessionKey: string): Promise<boolean> {
+        return this.ws.sendJson({
+            command: 'Resume',
+            arguments: [ sessionKey ],
+        })
+    }
+
+    // 起動時の処理
     constructor(private ws: WebSocketService) {
         ws.connect(this.url);
-       
+
+        // データを受け取ったときの処理
         ws.getObservable().subscribe((response: MessageEvent) => {
             console.log("DEBUG: "+ response.data);            
             let data = JSON.parse(response.data) as Recv;
             switch (data.typename) {
-                case "Connect":
+                case "Result": {
+                    this.resultNotifier.next(data.value as Result);
+                    break;
+                }
+                case "Register":
+                case "Login":
                 case "Resume": {
                     this.key = (data.value as string);
                     localStorage.setItem("key", this.key);
                     break;
                 }
-                case "Result": {
-                    this.resultNotifier.next(data.value as Result);
-                    break;
-                }
+
                 case "Team": {
                     this.updateNotifier.next(data.value as Team);
                 }
             }
         });
+
         let key = localStorage.getItem("key");
-        if (key === null) {
-            ws.sendJson({
-                command: 'Connect',
-                arguments: [],
-            });
-        } else {
-            ws.sendJson({
-                command: 'Resume',
-                arguments: [ key ],
-            })
+        if (key) {
+            this.resume(key);
         }
     }
 }
