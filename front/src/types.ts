@@ -24,5 +24,5 @@ export interface Team {
     name: string;
     channel: string;
     posts: Post[];
-    last_modified?: number|null;
+    last_modified: number;
 }
