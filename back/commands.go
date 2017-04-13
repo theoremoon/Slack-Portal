@@ -3,6 +3,7 @@ package main
 import (
 	"database/sql"
 	"errors"
+
 	"github.com/nlopes/slack"
 	"golang.org/x/net/websocket"
 )
@@ -36,6 +37,12 @@ func (sess *Session) Resume(sessionKey string) (string, error) {
 	if err != nil {
 		return "", err
 	}
+
+	err = sess.RestoreListeningTokens()
+	if err != nil {
+		return "", err
+	}
+
 	return newSessionKey, nil
 }
 

@@ -4,10 +4,12 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
-	_ "github.com/mattn/go-sqlite3"
-	"golang.org/x/net/websocket"
 	"log"
 	"net/http"
+	"os"
+
+	_ "github.com/mattn/go-sqlite3"
+	"golang.org/x/net/websocket"
 )
 
 const schema = `
@@ -107,16 +109,23 @@ func Accept(ws *websocket.Conn) {
 	}
 }
 
-func main() {
-	db, err := sql.Open("sqlite3", "./database.db")
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer db.Close()
+func IsFileExists(filename string) bool {
+	_, err := os.Stat(filename)
+	return err == nil
+}
 
-	_, err = db.Exec(schema)
-	if err != nil {
-		log.Fatal(err)
+func main() {
+	if !IsFileExists("./database.db") {
+		db, err := sql.Open("sqlite3", "./database.db")
+		if err != nil {
+			log.Fatal(err)
+		}
+		defer db.Close()
+
+		_, err = db.Exec(schema)
+		if err != nil {
+			log.Fatal(err)
+		}
 	}
 
 	http.Handle("/", websocket.Handler(Accept))
