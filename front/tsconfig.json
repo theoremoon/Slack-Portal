@@ -4,7 +4,13 @@
         "noImplicitAny": true,
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
-        "moduleResolution": "node"
+        "moduleResolution": "node",
+        "types": [
+            "node"
+        ],
+        "typeRoots": [
+            "node_modules/@types"
+        ]
     },
     "files": [
         "./index.ts"
