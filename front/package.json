@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "build": "webpack",
-    "build:w": "webpack --watch"
+    "build:w": "webpack --watch",
+    "serve": "lite-server"
   },
   "keywords": [],
   "author": "",
