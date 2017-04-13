@@ -41,10 +41,10 @@ export class TeamsComponent {
             return arr;
         });
         this.updateNotifyService.resultNotifier.subscribe((result: Result): void => {
-            if (result.succeeded && result.message) {
+            if (result.result && result.message) {
                 this.flashService.flash(result.message);
             }
-            else if (! result.succeeded && result.message) {
+            else if (! result.result && result.message) {
                 this.flashService.error(result.message);
             }
         })
