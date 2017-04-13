@@ -1,14 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 
-import { Team } from './team';
+import { Team, Result } from './types';
 import { UpdateNotifyService } from './update-notify.service';
 import { AudioService } from './audio.service';
+import { FlashService } from './flash.service';
+
+// import './teams.component.html';
+// import './teams.component.css';
 
 @Component({
     selector: 'teams',
-    templateUrl: './teams.component.html',
-    styleUrls: [ './teams.component.css' ]
+    template: require('./teams.component.html'),
+    styles: [ require('./teams.component.css') ]
 })
 export class TeamsComponent {
     private teams: Observable<Team[]>;
@@ -16,7 +20,9 @@ export class TeamsComponent {
     
     constructor(
         private updateNotifyService: UpdateNotifyService,
-        private audioService: AudioService) {}
+        private audioService: AudioService,
+        private flashService: FlashService
+    ) {}
     ngOnInit(): void {
         this.audioService.load('assets/gomen.mp3');
         this.teams = this.updateNotifyService.updateNotifier.map((team: Team): Team[] => {
@@ -34,6 +40,14 @@ export class TeamsComponent {
             });
             return arr;
         });
+        this.updateNotifyService.resultNotifier.subscribe((result: Result): void => {
+            if (result.succeeded && result.message) {
+                this.flashService.flash(result.message);
+            }
+            else if (! result.succeeded && result.message) {
+                this.flashService.error(result.message);
+            }
+        })
     }
     add_token(token: string) {
         this.updateNotifyService.register_token(token);
