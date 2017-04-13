@@ -1,9 +1,9 @@
-<login *ngIf="userNotLoggingIn">
+<div *ngIf="userNotLoggingIn">
     <input #username>
     <input #password type="password">
     <input type="button" value="login" (click)="login(username.value, password.value);">
     <input type="button" value="register" (click)="register(username.value, password.value);">
-</login>
+</div>
 
 <div>
 Add new token
