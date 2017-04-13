@@ -1,9 +1,8 @@
 {
     "server": {
-        "baseDir": "src"
+        "baseDir": "."
     },
     "files": [
-        "./src/*.{html,css}",
-        "./src/bundle.js"
+        "./*.{html,css,js}"
     ]
 }
