@@ -18,6 +18,7 @@ import { FlashService } from './flash.service';
 export class TeamsComponent {
     private teams: Observable<Team[]>;  // データが更新されるとここに入る
     private teamArray = new Map<string, Team>(); // データを持っておくだけの場所
+    private userNotLoggingIn: boolean; // ユーザがログインしているときはFalse
     
     constructor(
         private updateNotifyService: UpdateNotifyService,
@@ -59,10 +60,19 @@ export class TeamsComponent {
                 this.flashService.error(result.message);
             }
         })
+
+        this.userNotLoggingIn = ! this.updateNotifyService.isUserLoggingIn();
     }
 
-    // ログイン処理
+    // チームを追加
     add_token(token: string) {
         this.updateNotifyService.register_token(token);
+    }
+
+    login(username: string, password:string) {
+        this.updateNotifyService.login(username, password);
+    }
+    register(username: string, password: string) {
+        this.updateNotifyService.register(username, password);
     }
 }

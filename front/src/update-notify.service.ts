@@ -11,6 +11,11 @@ export class UpdateNotifyService {
     updateNotifier = new Subject<Team>();
     resultNotifier = new Subject<Result>();
 
+    // ユーザがログインしていたらtrueを返す
+    isUserLoggingIn(): boolean {
+        return this.key != null;
+    }
+
     register_token(apiToken: string): Promise<boolean> {
         return this.ws.sendJson({
             command: 'NewToken',
@@ -57,7 +62,6 @@ export class UpdateNotifyService {
                     localStorage.setItem("key", this.key);
                     break;
                 }
-
                 case "Team": {
                     this.updateNotifier.next(data.value as Team);
                 }
