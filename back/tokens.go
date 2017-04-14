@@ -15,7 +15,14 @@ func IsTokenExists(db *sql.DB, username, token string) (bool, error) {
 }
 
 func InsertNewToken(db *sql.DB, username, teamName, token string) error {
-	_, err := db.Exec("insert into apiTokens(apiToken, teamName, username) values (?, ?, ?)", token, teamName, username)
+	tokenExists, err := IsTokenExists(db, username, token)
+	if err != nil {
+		return err
+	}
+	if tokenExists {
+		return nil
+	}
+	_, err = db.Exec("insert into apiTokens(apiToken, teamName, username) values (?, ?, ?)", token, teamName, username)
 	if err != nil {
 		return err
 	}

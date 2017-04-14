@@ -3,6 +3,7 @@ package main
 import (
 	"database/sql"
 	"errors"
+	"fmt"
 
 	"github.com/nlopes/slack"
 	"golang.org/x/net/websocket"
@@ -112,8 +113,11 @@ func (sess *Session) RestoreListeningTokens() error {
 	if err != nil {
 		return err
 	}
+	fmt.Println(tokens)
 	for _, token := range tokens {
-		sess.TokenListen(token)
+		fmt.Println(token)
+		err = sess.TokenListen(token)
+		fmt.Println(err)
 	}
 
 	return nil
