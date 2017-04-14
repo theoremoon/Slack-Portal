@@ -76,6 +76,12 @@ func (sess *Session) TokenListen(token string) error {
 	sess.Commands[teamInfo.Name] = make(chan string, 2)
 	go ListenSlack(sess.Ws, api, sess.Commands[teamInfo.Name])
 
+	// 監視をはじめた通知
+	websocket.JSON.Send(sess.Ws, Response{
+		TypeName: "Listen",
+		Value:    teamInfo.Name,
+	})
+
 	return nil
 }
 func (sess *Session) NewToken(token string) error {

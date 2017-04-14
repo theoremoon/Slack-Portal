@@ -49,16 +49,15 @@ export class TeamsComponent {
                 return 0;
             });
 
-            // チーム名がまだ追加されてなかったら入れておく
-            if (! this.teamNameArray.has(team.name)) {
-                this.teamNameArray.add(team.name);
-                this.teamNames.next(Array.from(this.teamNameArray.values()));
-            }
-            
+            this.addListeningTeam(team.name);
 
             return arr;
         });
 
+        // チーム名が追加されたときの処理
+        this.updateNotifyService.teamNameNotifier.subscribe((teamName: string) => {
+            this.addListeningTeam(teamName);
+        })
 
         // 通知を受け取ったときの処理
         this.updateNotifyService.resultNotifier.subscribe((result: Result): void => {
@@ -71,6 +70,14 @@ export class TeamsComponent {
         })
 
         this.isUserLogin = this.updateNotifyService.isUserLogin();
+    }
+        
+    // チーム名がまだ追加されてなかったら入れておく
+    addListeningTeam(teamName: string) {
+        if (! this.teamNameArray.has(teamName)) {
+            this.teamNameArray.add(teamName);
+            this.teamNames.next(Array.from(this.teamNameArray.values()));
+        }
     }
 
     // チームを追加
