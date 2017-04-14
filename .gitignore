@@ -1,3 +1,5 @@
 node_modules
 npm-debug*
 bundle.js
+back.exe
+*db
