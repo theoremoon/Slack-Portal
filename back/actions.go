@@ -14,10 +14,11 @@ type Post struct {
 	Content string `json:"content"`
 }
 type Team struct {
-	Domain  string `json:"domain"`
-	Name    string `json:"name"`
-	Channel string `json:"channel"`
-	Posts   []Post `json:"posts"`
+	Domain       string `json:"domain"`
+	Name         string `json:"name"`
+	Channel      string `json:"channel"`
+	Posts        []Post `json:"posts"`
+	LastModified string `json:"last_modified"`
 }
 
 func Notify(ws *websocket.Conn, api *slack.Client, ev *slack.MessageEvent) error {
@@ -38,6 +39,7 @@ func Notify(ws *websocket.Conn, api *slack.Client, ev *slack.MessageEvent) error
 		team.Name,
 		channel.Name,
 		[]Post{Post{Author{user.Name, user.Profile.Image24}, ev.Text}},
+		ev.Timestamp,
 	}
 	websocket.JSON.Send(ws, Response{
 		"Team",

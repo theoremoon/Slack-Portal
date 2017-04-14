@@ -34,7 +34,7 @@ export class TeamsComponent {
         // データを受け取ったときの処理
         this.teams = this.updateNotifyService.updateNotifier.map((team: Team): Team[] => {
             this.audioService.play();
-            team.last_modified = Date.now(); // FIXME ここでやるべきじゃない
+            // team.last_modified = Date.now(); // FIXME ここでやるべきじゃない
 
             // チーム名でデータを更新して更新時刻で降順ソート
             this.teamArray.set(team.name, team);
