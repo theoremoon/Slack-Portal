@@ -12,7 +12,7 @@ export class UpdateNotifyService {
     resultNotifier = new Subject<Result>();
 
     // ユーザがログインしていたらtrueを返す
-    isUserLoggingIn(): boolean {
+    isUserLogin(): boolean {
         return this.key != null;
     }
 

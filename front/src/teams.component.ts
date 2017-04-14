@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs/Rx';
+import { Observable, Subject } from 'rxjs/Rx';
 
 import { Team, Result } from './types';
 import { UpdateNotifyService } from './update-notify.service';
@@ -18,7 +18,9 @@ import { FlashService } from './flash.service';
 export class TeamsComponent {
     private teams: Observable<Team[]>;  // データが更新されるとここに入る
     private teamArray = new Map<string, Team>(); // データを持っておくだけの場所
-    private userNotLoggingIn: boolean; // ユーザがログインしているときはFalse
+    private teamNames = new Subject<string[]>(); // チーム名だけも持っておく
+    private teamNameArray = new Set<string>(); 
+    private isUserLogin: boolean; // ユーザがログインしているときはFalse
     
     constructor(
         private updateNotifyService: UpdateNotifyService,
@@ -34,7 +36,6 @@ export class TeamsComponent {
         // データを受け取ったときの処理
         this.teams = this.updateNotifyService.updateNotifier.map((team: Team): Team[] => {
             this.audioService.play();
-            // team.last_modified = Date.now(); // FIXME ここでやるべきじゃない
 
             // チーム名でデータを更新して更新時刻で降順ソート
             this.teamArray.set(team.name, team);
@@ -48,8 +49,16 @@ export class TeamsComponent {
                 return 0;
             });
 
+            // チーム名がまだ追加されてなかったら入れておく
+            if (! this.teamNameArray.has(team.name)) {
+                this.teamNameArray.add(team.name);
+                this.teamNames.next(Array.from(this.teamNameArray.values()));
+            }
+            
+
             return arr;
         });
+
 
         // 通知を受け取ったときの処理
         this.updateNotifyService.resultNotifier.subscribe((result: Result): void => {
@@ -61,7 +70,7 @@ export class TeamsComponent {
             }
         })
 
-        this.userNotLoggingIn = ! this.updateNotifyService.isUserLoggingIn();
+        this.isUserLogin = this.updateNotifyService.isUserLogin();
     }
 
     // チームを追加
@@ -74,5 +83,8 @@ export class TeamsComponent {
     }
     register(username: string, password: string) {
         this.updateNotifyService.register(username, password);
+    }
+    deleteTeam(teamName: string) {
+        
     }
 }
