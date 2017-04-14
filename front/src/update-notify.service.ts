@@ -10,6 +10,7 @@ export class UpdateNotifyService {
     private key: string;
     updateNotifier = new Subject<Team>();
     resultNotifier = new Subject<Result>();
+    teamNameNotifier = new Subject<string>(); // 監視しているチームの通知
 
     // ユーザがログインしていたらtrueを返す
     isUserLogin(): boolean {
@@ -53,6 +54,10 @@ export class UpdateNotifyService {
             switch (data.typename) {
                 case "Result": {
                     this.resultNotifier.next(data.value as Result);
+                    break;
+                }
+                case "Listen": {
+                    this.teamNameNotifier.next(data.value as string);
                     break;
                 }
                 case "Register":
