@@ -1,4 +1,5 @@
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
+var webpack = require('webpack');
 
 module.exports = {
     entry: './index.ts',
@@ -33,7 +34,8 @@ module.exports = {
         extensions: ['.ts', '.js']
     },
     plugins: [
-        new ExtractTextPlugin("[name].css")
+        new ExtractTextPlugin("[name].css"),
+        new webpack.EnvironmentPlugin(["SERVER_PORT"]),
     ],
     cache: true
 }
