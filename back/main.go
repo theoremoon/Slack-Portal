@@ -107,7 +107,13 @@ func Accept(ws *websocket.Conn) {
 				websocket.JSON.Send(ws, Response{"Result", Result{false, "NewToken"}})
 			}
 		case "Stop":
-			sess.StopListen(args[0])
+			err = sess.StopListen(args[0])
+			if err == nil {
+				websocket.JSON.Send(ws, Response{"Stop", args[0]})
+			} else {
+				fmt.Println(err)
+				websocket.JSON.Send(ws, Response{"Result", Result{false, "Stop"}})
+			}
 		}
 	}
 }
