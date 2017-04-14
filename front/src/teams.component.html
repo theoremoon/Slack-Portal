@@ -1,4 +1,4 @@
-<div [hidden]="!isUserLogin">
+<div [hidden]="!isUserLogin" id="loginform">
     <input #username>
     <input #password type="password">
     <br>
@@ -7,11 +7,11 @@
     <input type="button" value="register" (click)="register(username.value, password.value);">
 </div>
 
-<div>
+<div id="addToken">
     <input #apitoken>
     <input type="button" (click)="add_token(apitoken.value); apitoken.value='';" value="Add New Token">
 </div>
-<div *ngFor="let teamName of teamNames | async">
+<div *ngFor="let teamName of teamNames | async" id="currentTeams">
     <div>
         <span>{{ teamName }}</span>
         <input type="button" value="X" (click)="deleteTeam(teamName)">

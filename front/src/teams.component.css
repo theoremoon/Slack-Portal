@@ -1,3 +1,23 @@
 .author-face-image {
     max-width: 16px;
 }
+
+.posts {
+    list-style-type: none;
+    padding: 0;
+}
+.team {
+    display: block;
+    text-decoration: none;
+    padding: 1px;
+}
+.team:hover {
+    cursor: pointer;
+    border: 1px solid #000;
+}
+.team-name {
+    font-size: larger;
+}
+.post {
+    background-color: rgba(0,0,0,0.1);
+}

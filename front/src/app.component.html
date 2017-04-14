@@ -1,7 +1,8 @@
-<h1>Slack Portal</h1>
-<!--<addteam></addteam>-->
+<header>
+    <h1>Slack Portal</h1>
+</header>
 
-<div>{{ messageObservable | async }}</div>
-<div>{{ errorObservable | async }}</div>
+<div class="message">{{ messageObservable | async }}</div>
+<div class="error">{{ errorObservable | async }}</div>
 
 <teams></teams>
