@@ -11,6 +11,7 @@ export class UpdateNotifyService {
     updateNotifier = new Subject<Team>();
     resultNotifier = new Subject<Result>();
     teamNameNotifier = new Subject<string>(); // 監視しているチームの通知
+    deletedTeamNotifier = new Subject<string>(); // 削除されたチームの通知
 
     // ユーザがログインしていたらtrueを返す
     isUserLogin(): boolean {
@@ -75,8 +76,20 @@ export class UpdateNotifyService {
                 }
                 case "Team": {
                     this.updateNotifier.next(data.value as Team);
+                    break;
+                }
+                case "Stop": {
+                    this.deletedTeamNotifier.next(data.value as string);
+                    break;
                 }
             }
+        },
+        // WS 接続失敗……
+        (error) => {
+            this.resultNotifier.next({
+                result: false,
+                message: error,
+            });
         });
 
         let key = localStorage.getItem("key");
