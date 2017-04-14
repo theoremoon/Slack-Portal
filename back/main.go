@@ -138,8 +138,16 @@ func main() {
 		}
 	}
 
+	port := "8888"
+	for i, v := range os.Args {
+		if v == "--port" && len(os.Args) > i+1 {
+			port = os.Args[i+1]
+			break
+		}
+	}
+
 	http.Handle("/", websocket.Handler(Accept))
-	if err := http.ListenAndServe("0.0.0.0:8888", nil); err != nil {
+	if err := http.ListenAndServe("0.0.0.0:"+port, nil); err != nil {
 		log.Fatal(err)
 	}
 }
