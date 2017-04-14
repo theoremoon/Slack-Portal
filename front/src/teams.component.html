@@ -1,14 +1,21 @@
-<div *ngIf="userNotLoggingIn">
+<div [hidden]="!isUserLogin">
     <input #username>
     <input #password type="password">
+    <br>
     <input type="button" value="login" (click)="login(username.value, password.value);">
+    <br>
     <input type="button" value="register" (click)="register(username.value, password.value);">
 </div>
 
 <div>
-Add new token
-<input #apitoken>
-<input type="button" (click)="add_token(apitoken.value); apitoken.value='';">
+    <input #apitoken>
+    <input type="button" (click)="add_token(apitoken.value); apitoken.value='';" value="Add New Token">
+</div>
+<div *ngFor="let teamName of teamNames | async">
+    <div>
+        <span>{{ teamName }}</span>
+        <input type="button" value="X" (click)="deleteTeam(teamName)">
+    </div>
 </div>
 <div id="teams" *ngFor="let team of teams | async">
 <a style="display: block" href="https://{{ team.domain }}.slack.com" target="_blank" class="team">
