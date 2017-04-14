@@ -73,6 +73,11 @@ func (sess *Session) TokenListen(token string) error {
 		return err
 	}
 
+	err = InsertNewToken(sess.Db, sess.User.Username, teamInfo.Name, token)
+	if err != nil {
+		return err
+	}
+
 	sess.Commands[teamInfo.Name] = make(chan string, 2)
 	go ListenSlack(sess.Ws, api, sess.Commands[teamInfo.Name])
 
@@ -95,10 +100,7 @@ func (sess *Session) NewToken(token string) error {
 	if exist {
 		return errors.New("Token already registered")
 	}
-	err = InsertNewToken(sess.Db, sess.User.Username, token)
-	if err != nil {
-		return err
-	}
+
 	err = sess.TokenListen(token)
 	if err != nil {
 		return err
@@ -115,4 +117,10 @@ func (sess *Session) RestoreListeningTokens() error {
 	}
 
 	return nil
+}
+
+// StopListen 監視を終了します
+func (sess *Session) StopListen(teamName string) {
+	sess.Commands[teamName] <- "stop"
+	DeleteToken(sess.Db, teamName)
 }

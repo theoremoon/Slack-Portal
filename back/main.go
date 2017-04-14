@@ -24,6 +24,7 @@ create table sessions (
 );
 create table apiTokens (
 	apiToken text,
+	teamName text,
 	username text
 );
 `
@@ -105,6 +106,8 @@ func Accept(ws *websocket.Conn) {
 				fmt.Println(err)
 				websocket.JSON.Send(ws, Response{"Result", Result{false, "NewToken"}})
 			}
+		case "Stop":
+			sess.StopListen(args[0])
 		}
 	}
 }

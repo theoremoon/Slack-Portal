@@ -14,8 +14,8 @@ func IsTokenExists(db *sql.DB, username, token string) (bool, error) {
 	return cnt > 0, nil
 }
 
-func InsertNewToken(db *sql.DB, username, token string) error {
-	_, err := db.Exec("insert into apiTokens(apiToken, username) values (?, ?)", token, username)
+func InsertNewToken(db *sql.DB, username, teamName, token string) error {
+	_, err := db.Exec("insert into apiTokens(apiToken, teamName, username) values (?, ?, ?)", token, teamName, username)
 	if err != nil {
 		return err
 	}
@@ -39,4 +39,9 @@ func GetAllTokens(db *sql.DB, username string) ([]string, error) {
 	}
 
 	return tokens, nil
+}
+
+func DeleteToken(db *sql.DB, teamName string) error {
+	_, err := db.Query("delete from apiTokens where teamName=?", teamName)
+	return err
 }
