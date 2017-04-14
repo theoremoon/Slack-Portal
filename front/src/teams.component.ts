@@ -70,6 +70,7 @@ export class TeamsComponent {
         })
 
         this.isUserLogin = this.updateNotifyService.isUserLogin();
+        console.log(this.isUserLogin);
     }
         
     // チーム名がまだ追加されてなかったら入れておく
@@ -92,6 +93,6 @@ export class TeamsComponent {
         this.updateNotifyService.register(username, password);
     }
     deleteTeam(teamName: string) {
-        
+        this.updateNotifyService.stopListen(teamName);
     }
 }

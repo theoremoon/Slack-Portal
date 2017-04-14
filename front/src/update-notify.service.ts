@@ -23,6 +23,12 @@ export class UpdateNotifyService {
             arguments: [ apiToken ]
         });
     }
+    stopListen(teamName: string): Promise<boolean> {
+        return this.ws.sendJson({
+            command: 'Stop',
+            arguments: [ teamName ],
+        });
+    }
 
     register(username: string, password: string): Promise<boolean> {
         return this.ws.sendJson({
