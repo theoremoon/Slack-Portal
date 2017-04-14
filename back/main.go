@@ -25,7 +25,8 @@ create table sessions (
 create table apiTokens (
 	apiToken text,
 	teamName text,
-	username text
+	username text,
+	unique(teamName, username)
 );
 `
 

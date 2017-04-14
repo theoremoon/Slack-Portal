@@ -122,7 +122,7 @@ func (sess *Session) RestoreListeningTokens() error {
 // StopListen 監視を終了します
 func (sess *Session) StopListen(teamName string) error {
 	sess.Commands[teamName] <- "stop"
-	err := DeleteToken(sess.Db, teamName)
+	err := DeleteToken(sess.Db, sess.User.Username, teamName)
 	if err != nil {
 		return err
 	}

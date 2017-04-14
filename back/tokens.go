@@ -41,7 +41,7 @@ func GetAllTokens(db *sql.DB, username string) ([]string, error) {
 	return tokens, nil
 }
 
-func DeleteToken(db *sql.DB, teamName string) error {
-	_, err := db.Query("delete from apiTokens where teamName=?", teamName)
+func DeleteToken(db *sql.DB, username string, teamName string) error {
+	_, err := db.Exec("delete from apiTokens where username=? and teamName=?", username, teamName)
 	return err
 }
