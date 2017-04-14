@@ -58,10 +58,14 @@ func ListenSlack(ws *websocket.Conn, api *slack.Client, command chan string) {
 			case *slack.MessageEvent:
 				err := Notify(ws, api, ev)
 				if err != nil {
-					break
+					return
 				}
 			}
-		case <-command:
+		case cmd := <-command:
+			switch cmd {
+			case "stop":
+				return
+			}
 		}
 	}
 }

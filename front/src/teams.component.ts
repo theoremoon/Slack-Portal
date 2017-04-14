@@ -16,7 +16,7 @@ import { FlashService } from './flash.service';
  * メインのコンポーネント。ログインもここでやっちゃえということになってる
  */
 export class TeamsComponent {
-    private teams: Observable<Team[]>;  // データが更新されるとここに入る
+    private teams = new Subject<Team[]>();  // データが更新されるとここに入る
     private teamArray = new Map<string, Team>(); // データを持っておくだけの場所
     private teamNames = new Subject<string[]>(); // チーム名だけも持っておく
     private teamNameArray = new Set<string>(); 
@@ -34,7 +34,7 @@ export class TeamsComponent {
         this.audioService.load('assets/gomen.mp3');
 
         // データを受け取ったときの処理
-        this.teams = this.updateNotifyService.updateNotifier.map((team: Team): Team[] => {
+        this.updateNotifyService.updateNotifier.subscribe((team: Team) => {
             this.audioService.play();
 
             // チーム名でデータを更新して更新時刻で降順ソート
@@ -51,13 +51,18 @@ export class TeamsComponent {
 
             this.addListeningTeam(team.name);
 
-            return arr;
+            this.teams.next(arr);
         });
 
         // チーム名が追加されたときの処理
         this.updateNotifyService.teamNameNotifier.subscribe((teamName: string) => {
             this.addListeningTeam(teamName);
         })
+
+        // チームが削除されたときの処理
+        this.updateNotifyService.deletedTeamNotifier.subscribe((teamName: string) => {
+            this.removeListeningTeam(teamName);
+        });
 
         // 通知を受け取ったときの処理
         this.updateNotifyService.resultNotifier.subscribe((result: Result): void => {
@@ -70,6 +75,7 @@ export class TeamsComponent {
         })
 
         this.isUserLogin = this.updateNotifyService.isUserLogin();
+        console.log(this.isUserLogin);
     }
         
     // チーム名がまだ追加されてなかったら入れておく
@@ -78,6 +84,13 @@ export class TeamsComponent {
             this.teamNameArray.add(teamName);
             this.teamNames.next(Array.from(this.teamNameArray.values()));
         }
+    }
+    removeListeningTeam(teamName: string) {
+        this.teamNameArray.delete(teamName);
+        this.teamArray.delete(teamName);
+
+        this.teamNames.next(Array.from(this.teamNameArray.values()));
+        this.teams.next(Array.from(this.teamArray.values()));
     }
 
     // チームを追加
@@ -92,6 +105,6 @@ export class TeamsComponent {
         this.updateNotifyService.register(username, password);
     }
     deleteTeam(teamName: string) {
-        
+        this.updateNotifyService.stopListen(teamName);
     }
 }
