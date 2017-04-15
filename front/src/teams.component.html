@@ -13,8 +13,8 @@
 </div>
 <div *ngFor="let teamName of teamNames | async" id="currentTeams">
     <div>
-        <a href="{{ teamName.domain }}">{{ teamName.name }}</a>
-        <input type="button" value="X" (click)="deleteTeam(teamName)">
+        <a href="https://{{ teamName.domain }}.slack.com" target="_blank">{{ teamName.name }}</a>
+        <input type="button" value="X" (click)="deleteTeam(teamName.name)">
     </div>
 </div>
 <div id="teams" *ngFor="let team of teams | async">
