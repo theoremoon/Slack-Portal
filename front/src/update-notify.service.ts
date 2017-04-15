@@ -6,7 +6,7 @@ import { Recv, Team, Result } from './types';
 
 @Injectable()
 export class UpdateNotifyService {
-    private url = 'ws://' + location.host + ":" + process.env.SERVER_PORT ;
+    private url = ((location.protocol==='https:')? 'wss://' :'ws://') + location.host + ":" + process.env.SERVER_PORT ;
     private key: string;
     updateNotifier = new Subject<Team>();
     resultNotifier = new Subject<Result>();
