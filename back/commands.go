@@ -83,9 +83,16 @@ func (sess *Session) TokenListen(token string) error {
 	go ListenSlack(sess.Ws, api, sess.Commands[teamInfo.Name])
 
 	// 監視をはじめた通知
+	type ListenTeam struct {
+		Name   string `json:"name"`
+		Domain string `json:"domain"`
+	}
 	websocket.JSON.Send(sess.Ws, Response{
 		TypeName: "Listen",
-		Value:    teamInfo.Name,
+		Value: ListenTeam{
+			Name:   teamInfo.Name,
+			Domain: teamInfo.Domain,
+		},
 	})
 
 	return nil

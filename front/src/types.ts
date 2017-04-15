@@ -26,3 +26,8 @@ export interface Team {
     posts: Post[];
     last_modified: number;
 }
+
+export interface ListenTeam {
+    domain: string;
+    name: string;
+}
