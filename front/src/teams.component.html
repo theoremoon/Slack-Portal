@@ -13,7 +13,7 @@
 </div>
 <div *ngFor="let teamName of teamNames | async" id="currentTeams">
     <div>
-        <span>{{ teamName }}</span>
+        <a href="{{ teamName.domain }}">{{ teamName.name }}</a>
         <input type="button" value="X" (click)="deleteTeam(teamName)">
     </div>
 </div>

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Subject, Observable } from 'rxjs/Rx';
 
 import { WebSocketService } from './websocket.service';
-import { Recv, Team, Result } from './types';
+import { Recv, Team, Result, ListenTeam } from './types';
 
 @Injectable()
 export class UpdateNotifyService {
@@ -10,7 +10,7 @@ export class UpdateNotifyService {
     private key: string;
     updateNotifier = new Subject<Team>();
     resultNotifier = new Subject<Result>();
-    teamNameNotifier = new Subject<string>(); // 監視しているチームの通知
+    teamNameNotifier = new Subject<ListenTeam>(); // 監視しているチームの通知
     deletedTeamNotifier = new Subject<string>(); // 削除されたチームの通知
 
     // ユーザがログインしていたらtrueを返す
@@ -64,7 +64,7 @@ export class UpdateNotifyService {
                     break;
                 }
                 case "Listen": {
-                    this.teamNameNotifier.next(data.value as string);
+                    this.teamNameNotifier.next(data.value as ListenTeam);
                     break;
                 }
                 case "Register":

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable, Subject } from 'rxjs/Rx';
 
-import { Team, Result } from './types';
+import { Team, Result, ListenTeam } from './types';
 import { UpdateNotifyService } from './update-notify.service';
 import { AudioService } from './audio.service';
 import { FlashService } from './flash.service';
@@ -18,8 +18,8 @@ import { FlashService } from './flash.service';
 export class TeamsComponent {
     private teams = new Subject<Team[]>();  // データが更新されるとここに入る
     private teamArray = new Map<string, Team>(); // データを持っておくだけの場所
-    private teamNames = new Subject<string[]>(); // チーム名だけも持っておく
-    private teamNameArray = new Set<string>(); 
+    private teamNames = new Subject<ListenTeam[]>(); // チーム名だけも持っておく
+    private teamNameAssoc = new Map<string, ListenTeam>(); 
     private isUserLogin: boolean; // ユーザがログインしているときはFalse
     
     constructor(
@@ -49,14 +49,12 @@ export class TeamsComponent {
                 return 0;
             });
 
-            this.addListeningTeam(team.name);
-
             this.teams.next(arr);
         });
 
         // チーム名が追加されたときの処理
-        this.updateNotifyService.teamNameNotifier.subscribe((teamName: string) => {
-            this.addListeningTeam(teamName);
+        this.updateNotifyService.teamNameNotifier.subscribe((team: ListenTeam) => {
+            this.addListeningTeam(team);
         })
 
         // チームが削除されたときの処理
@@ -79,17 +77,17 @@ export class TeamsComponent {
     }
         
     // チーム名がまだ追加されてなかったら入れておく
-    addListeningTeam(teamName: string) {
-        if (! this.teamNameArray.has(teamName)) {
-            this.teamNameArray.add(teamName);
-            this.teamNames.next(Array.from(this.teamNameArray.values()));
+    addListeningTeam(team: ListenTeam) {
+        if (! this.teamNameAssoc.has(team.name)) {
+            this.teamNameAssoc.set(team.name, team);
+            this.teamNames.next(Array.from(this.teamNameAssoc.values()));
         }
     }
     removeListeningTeam(teamName: string) {
-        this.teamNameArray.delete(teamName);
+        this.teamNameAssoc.delete(teamName);
         this.teamArray.delete(teamName);
 
-        this.teamNames.next(Array.from(this.teamNameArray.values()));
+        this.teamNames.next(Array.from(this.teamNameAssoc.values()));
         this.teams.next(Array.from(this.teamArray.values()));
     }
 
