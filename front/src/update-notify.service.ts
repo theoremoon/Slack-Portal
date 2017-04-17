@@ -86,11 +86,13 @@ export class UpdateNotifyService {
         },
         // WS 接続失敗……
         (error) => {
+            console.log(error);
             this.resultNotifier.next({
                 result: false,
                 message: error,
             });
         });
+
 
         let key = localStorage.getItem("key");
         if (key) {
